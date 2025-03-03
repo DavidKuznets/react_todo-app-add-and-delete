@@ -17,6 +17,7 @@ export const App: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [loadingTodos, setLoadingTodos] = useState<number[]>([]);
   const [filter, setFilter] = useState<'all' | 'active' | 'completed'>('all');
+  const [tempTodo, setTempTodo] = useState<Todo | null>(null);
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -35,20 +36,32 @@ export const App: React.FC = () => {
   const handleAdd = async (event: React.FormEvent) => {
     event.preventDefault();
     if (!newTodo.trim()) {
-      setError('Todo cannot be empty');
+      setError('Title should not be empty');
 
       return;
     }
 
     setIsLoading(true);
-    try {
-      const newTodoItem = { title: newTodo, completed: false };
-      const savedTodo = await addTodo(newTodoItem);
 
-      setTodos([...todos, savedTodo]);
-      setNewTodo('');
+    const temp = {
+      id: 0, // тимчасовий ID
+      title: newTodo.trim(),
+      completed: false,
+    };
+
+    setTempTodo(temp);
+    setNewTodo('');
+
+    try {
+      const savedTodo = await addTodo({
+        title: newTodo.trim(),
+        completed: false,
+      });
+
+      setTodos(prev => [...prev, savedTodo]);
+      setTempTodo(null); // прибираємо tempTodo після успішного додавання
     } catch {
-      setError('Unable to add todo');
+      setError('Unable to add a todo');
     } finally {
       setIsLoading(false);
     }
@@ -77,7 +90,7 @@ export const App: React.FC = () => {
   useEffect(() => {
     setTimeout(() => {
       inputRef.current?.focus();
-    }, 0);
+    }, 140);
   }, []);
 
   useEffect(() => {
