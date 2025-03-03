@@ -44,7 +44,7 @@ export const App: React.FC = () => {
     setIsLoading(true);
 
     const temp = {
-      id: 0, // тимчасовий ID
+      id: 0,
       title: newTodo.trim(),
       completed: false,
     };
@@ -59,7 +59,7 @@ export const App: React.FC = () => {
       });
 
       setTodos(prev => [...prev, savedTodo]);
-      setTempTodo(null); // прибираємо tempTodo після успішного додавання
+      setTempTodo(null);
     } catch {
       setError('Unable to add a todo');
     } finally {
@@ -192,6 +192,45 @@ export const App: React.FC = () => {
               </div>
             </div>
           ))}
+
+          {tempTodo && (
+            <div
+              key={tempTodo.id}
+              data-cy="Todo"
+              className={`todo ${tempTodo.completed ? 'completed' : ''}`}
+            >
+              <label className="todo__status-label">
+                <input
+                  data-cy="TodoStatus"
+                  type="checkbox"
+                  className="todo__status"
+                  checked={tempTodo.completed}
+                  onChange={() => handleToggle(tempTodo.id)}
+                />
+              </label>
+
+              <span data-cy="TodoTitle" className="todo__title">
+                {tempTodo.title}
+              </span>
+
+              <button
+                type="button"
+                className="todo__remove"
+                data-cy="TodoDelete"
+                onClick={() => handleDelete(tempTodo.id)}
+              >
+                ×
+              </button>
+
+              <div
+                data-cy="TodoLoader"
+                className={`modal overlay ${loadingTodos.includes(tempTodo.id) ? 'is-active' : ''}`}
+              >
+                <div className="modal-background has-background-white-ter" />
+                <div className="loader" />
+              </div>
+            </div>
+          )}
         </section>
 
         {todos.length > 0 && (
