@@ -35,13 +35,12 @@ export const App: React.FC = () => {
 
   const handleAdd = async (event: React.FormEvent) => {
     event.preventDefault();
+
     if (!newTodo.trim()) {
       setError('Title should not be empty');
 
       return;
     }
-
-    setIsLoading(true);
 
     const temp: Todo = {
       id: 0,
@@ -50,7 +49,7 @@ export const App: React.FC = () => {
     };
 
     setTempTodo(temp);
-    setNewTodo('');
+    setIsLoading(true);
 
     try {
       const savedTodo = await addTodo({
@@ -59,21 +58,25 @@ export const App: React.FC = () => {
       });
 
       setTodos(prev => [...prev, savedTodo]);
+      setNewTodo('');
     } catch {
       setError('Unable to add a todo');
     } finally {
       setTempTodo(null);
+      setTimeout(() => inputRef.current?.focus(), 0);
       setIsLoading(false);
     }
   };
 
   const handleDelete = async (id: number) => {
     setLoadingTodos(prev => [...prev, id]);
+
     try {
       await deleteTodo(id);
       setTodos(prevTodos => prevTodos.filter(todo => todo.id !== id));
+      inputRef.current?.focus();
     } catch {
-      setError('Unable to delete todo');
+      setError('Unable to delete a todo');
     } finally {
       setLoadingTodos(prev => prev.filter(todoId => todoId !== id));
     }
@@ -85,6 +88,12 @@ export const App: React.FC = () => {
         todo.id === id ? { ...todo, completed: !todo.completed } : todo,
       ),
     );
+  };
+
+  const handleClearCompleted = async () => {
+    const completedTodos = todos.filter(todo => todo.completed);
+
+    await Promise.all(completedTodos.map(todo => handleDelete(todo.id)));
   };
 
   useEffect(() => {
@@ -222,10 +231,7 @@ export const App: React.FC = () => {
                 ×
               </button>
 
-              <div
-                data-cy="TodoLoader"
-                className={`modal overlay ${loadingTodos.includes(tempTodo.id) ? 'is-active' : ''}`}
-              >
+              <div data-cy="TodoLoader" className="modal overlay is-active">
                 <div className="modal-background has-background-white-ter" />
                 <div className="loader" />
               </div>
@@ -269,6 +275,7 @@ export const App: React.FC = () => {
               className="todoapp__clear-completed"
               data-cy="ClearCompletedButton"
               disabled={!todos.some(todo => todo.completed)}
+              onClick={handleClearCompleted}
             >
               Clear completed
             </button>
