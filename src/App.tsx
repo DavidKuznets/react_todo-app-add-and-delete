@@ -43,7 +43,7 @@ export const App: React.FC = () => {
 
     setIsLoading(true);
 
-    const temp = {
+    const temp: Todo = {
       id: 0,
       title: newTodo.trim(),
       completed: false,
@@ -54,15 +54,15 @@ export const App: React.FC = () => {
 
     try {
       const savedTodo = await addTodo({
-        title: newTodo.trim(),
+        title: temp.title,
         completed: false,
       });
 
       setTodos(prev => [...prev, savedTodo]);
-      setTempTodo(null);
     } catch {
       setError('Unable to add a todo');
     } finally {
+      setTempTodo(null);
       setIsLoading(false);
     }
   };
