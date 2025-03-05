@@ -1,6 +1,7 @@
-import '../styles/todoapp.scss';
+import { Todo } from '../types/Todo';
 
 interface Props {
+  todos: Todo[];
   newTodo: string;
   setNewTodo: React.Dispatch<React.SetStateAction<string>>;
   handleAdd: (event: React.FormEvent) => Promise<void>;
@@ -9,33 +10,28 @@ interface Props {
 }
 
 export const TodoHeader: React.FC<Props> = ({
+  todos,
+  handleAdd,
   newTodo,
   setNewTodo,
-  handleAdd,
   isLoading,
   inputRef,
 }) => {
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    if (!newTodo.trim()) {
-      return;
-    }
-
-    handleAdd(event);
-    setNewTodo('');
-    setTimeout(() => inputRef.current?.focus(), 0);
-  };
-
   return (
     <header className="todoapp__header">
-      <form onSubmit={handleSubmit}>
+      <button
+        type="button"
+        className={`todoapp__toggle-all ${todos.length > 0 && todos.every(todo => todo.completed) ? 'active' : ''}`}
+        data-cy="ToggleAllButton"
+      />
+      <form onSubmit={handleAdd}>
         <input
           data-cy="NewTodoField"
           type="text"
           className="todoapp__new-todo"
           placeholder="What needs to be done?"
           value={newTodo}
-          onChange={e => setNewTodo(e.target.value)}
+          onChange={event => setNewTodo(event.target.value)}
           disabled={isLoading}
           ref={inputRef}
         />

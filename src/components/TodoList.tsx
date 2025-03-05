@@ -1,36 +1,38 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
+
 import { Todo } from '../types/Todo';
 import { TodoItem } from './TodoItem';
-import '../styles/todo.scss';
 
 interface Props {
-  todos: Todo[];
-  tempTodo: Todo | null;
+  filteredTodos: Todo[];
+  isLoading: boolean;
   handleToggle: (id: number) => void;
   handleDelete: (id: number) => Promise<void>;
   loadingTodos: number[];
 }
 
 export const TodoList: React.FC<Props> = ({
-  todos,
+  filteredTodos,
+  isLoading,
   handleToggle,
   handleDelete,
   loadingTodos,
 }) => {
-  if (todos.length === 0) {
-    return null;
-  }
-
   return (
-    <section className="todoapp__main" data-cy="TodoList">
-      {todos.map(todo => (
-        <TodoItem
-          key={todo.id}
-          todo={todo}
-          onToggle={handleToggle}
-          onDelete={handleDelete}
-          isLoading={loadingTodos.includes(todo.id)}
-        />
-      ))}
+    <section
+      className="todoapp__main"
+      data-cy="TodoList"
+      style={{
+        display: filteredTodos.length === 0 && !isLoading ? 'none' : 'block',
+      }}
+    >
+      <TodoItem
+        isLoading={isLoading}
+        handleToggle={handleToggle}
+        filteredTodos={filteredTodos}
+        handleDelete={handleDelete}
+        loadingTodos={loadingTodos}
+      />
     </section>
   );
 };
