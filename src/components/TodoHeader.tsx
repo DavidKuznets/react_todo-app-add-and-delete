@@ -1,3 +1,5 @@
+import '../styles/todoapp.scss';
+
 interface Props {
   newTodo: string;
   setNewTodo: React.Dispatch<React.SetStateAction<string>>;

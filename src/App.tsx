@@ -4,6 +4,8 @@ import { TodoList } from './components/TodoList';
 import { TodoFooter } from './components/TodoFooter';
 import { TodoHeader } from './components/TodoHeader';
 import { Todo } from './types/Todo';
+import './styles/index.scss';
+import './styles/filter.scss';
 
 export const App: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
@@ -22,7 +24,7 @@ export const App: React.FC = () => {
       try {
         const loadedTodos = await getTodos();
 
-        setTodos(loadedTodos);
+        setTodos(Array.isArray(loadedTodos) ? loadedTodos : []);
       } catch {
         setError('Unable to load todos');
       } finally {

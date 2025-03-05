@@ -1,5 +1,6 @@
 import { Todo } from '../types/Todo';
 import { TodoItem } from './TodoItem';
+import '../styles/todo.scss';
 
 interface Props {
   todos: Todo[];

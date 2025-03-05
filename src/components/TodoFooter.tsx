@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/indent */
 import React from 'react';
 import { Todo } from '../types/Todo';
+import '../styles/todoapp.scss';
 
 interface Props {
   todos: Todo[];
@@ -22,8 +24,6 @@ export const TodoFooter: React.FC<Props> = ({
       <span>{todos.length} items left</span>
 
       <button onClick={handleClearCompleted}>Clear completed</button>
-
-      {}
       <button
         onClick={() => setFilter('all')}
         className={filter === 'all' ? 'selected' : ''}
