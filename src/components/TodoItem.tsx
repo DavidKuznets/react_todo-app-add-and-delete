@@ -48,17 +48,49 @@ export const TodoItem: React.FC<PropsTodoItem> = ({
             ×
           </button>
 
-          {tempTodo && (
-            <div
-              data-cy="TodoLoader"
-              className={`modal overlay ${loadingTodos.includes(todo.id) ? 'is-active' : ''}`}
-            >
-              <div className="modal-background has-background-white-ter" />
-              <div className="loader" />
-            </div>
-          )}
+          <div
+            data-cy="TodoLoader"
+            className={`modal overlay ${loadingTodos.includes(todo.id) ? 'is-active' : ''}`}
+          >
+            <div className="modal-background has-background-white-ter" />
+            <div className="loader" />
+          </div>
         </div>
       ))}
+
+      {tempTodo && (
+        <div
+          key={tempTodo.id}
+          data-cy="Todo"
+          className={`todo ${tempTodo.completed ? 'completed' : ''}`}
+        >
+          <label className="todo__status-label">
+            <input
+              data-cy="TodoStatus"
+              type="checkbox"
+              className="todo__status"
+              checked={tempTodo.completed}
+              onChange={() => handleToggle(tempTodo.id)}
+            />
+          </label>
+          <span data-cy="TodoTitle" className="todo__title">
+            {tempTodo.title}
+          </span>
+          <button
+            type="button"
+            className="todo__remove"
+            data-cy="TodoDelete"
+            onClick={() => handleDelete(tempTodo.id)}
+          >
+            ×
+          </button>
+
+          <div data-cy="TodoLoader" className="modal overlay is-active">
+            <div className="modal-background has-background-white-ter" />
+            <div className="loader" />
+          </div>
+        </div>
+      )}
     </>
   );
 };

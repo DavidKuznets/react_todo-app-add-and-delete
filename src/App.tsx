@@ -52,16 +52,19 @@ export const App: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const newTodoItem = { title: newTodo, completed: false };
+      const newTodoItem = { title: trimmedTitle, completed: false }; // Обрізаємо тут теж
       const savedTodo = await addTodo(newTodoItem);
 
       setTodos([...todos, savedTodo]);
       setNewTodo('');
       setTempTodo(null);
     } catch {
-      inputRef.current?.focus();
-      setError('Unable to add todo');
+      setError('Unable to add a todo');
+      setTempTodo(null);
     } finally {
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 0);
       setIsLoading(false);
     }
   };
@@ -70,13 +73,17 @@ export const App: React.FC = () => {
     setLoadingTodos(prev => [...prev, id]);
     try {
       await deleteTodo(id);
-      setTodos(prevTodos => prevTodos.filter(todo => todo.id !== id));
-    } catch {
+      setTodos(todos.filter(todo => todo.id !== id));
+
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 0);
+    } catch (err) {
+      setError('Unable to delete a todo');
       inputRef.current?.focus();
-      setError('Unable to delete todo');
-    } finally {
-      setLoadingTodos(prev => prev.filter(todoId => todoId !== id));
     }
+
+    inputRef.current?.focus();
   };
 
   const handleToggle = (id: number) => {
@@ -87,10 +94,12 @@ export const App: React.FC = () => {
     );
   };
 
-  const handleClearCompleted = () => {
-    const incompleteTodos = todos.filter(todo => !todo.completed);
+  const handleClearCompleted = async () => {
+    const completedTodos = todos.filter(todo => todo.completed);
 
-    setTodos(incompleteTodos);
+    await Promise.all(completedTodos.map(todo => deleteTodo(todo.id)));
+
+    setTodos(prev => prev.filter(todo => !todo.completed));
   };
 
   useEffect(() => {
@@ -108,7 +117,7 @@ export const App: React.FC = () => {
         setIsLoading(false);
         setTimeout(() => {
           inputRef.current?.focus();
-        }, 0);
+        }, 100);
       }
     };
 
