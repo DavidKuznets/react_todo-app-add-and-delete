@@ -97,9 +97,19 @@ export const App: React.FC = () => {
   const handleClearCompleted = async () => {
     const completedTodos = todos.filter(todo => todo.completed);
 
-    await Promise.all(completedTodos.map(todo => deleteTodo(todo.id)));
+    const results = await Promise.allSettled(
+      completedTodos.map(todo => deleteTodo(todo.id)),
+    );
 
-    setTodos(prev => prev.filter(todo => !todo.completed));
+    const successfulDeletes = completedTodos.filter(
+      (_, index) => results[index].status === 'fulfilled',
+    );
+
+    setTodos(prev => prev.filter(todo => !successfulDeletes.includes(todo)));
+
+    if (results.some(result => result.status === 'rejected')) {
+      setError('Unable to delete a todo');
+    }
   };
 
   useEffect(() => {
