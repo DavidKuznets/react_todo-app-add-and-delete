@@ -7,6 +7,7 @@ interface PropsTodoItem {
   handleToggle: (id: number) => void;
   handleDelete: (id: number) => Promise<void>;
   loadingTodos: number[];
+  tempTodo: Todo | null;
 }
 
 export const TodoItem: React.FC<PropsTodoItem> = ({
@@ -14,6 +15,7 @@ export const TodoItem: React.FC<PropsTodoItem> = ({
   filteredTodos,
   handleDelete,
   loadingTodos,
+  tempTodo,
 }) => {
   return (
     <>
@@ -46,13 +48,15 @@ export const TodoItem: React.FC<PropsTodoItem> = ({
             ×
           </button>
 
-          <div
-            data-cy="TodoLoader"
-            className={`modal overlay ${loadingTodos.includes(todo.id) ? 'is-active' : ''}`}
-          >
-            <div className="modal-background has-background-white-ter" />
-            <div className="loader" />
-          </div>
+          {tempTodo && (
+            <div
+              data-cy="TodoLoader"
+              className={`modal overlay ${loadingTodos.includes(todo.id) ? 'is-active' : ''}`}
+            >
+              <div className="modal-background has-background-white-ter" />
+              <div className="loader" />
+            </div>
+          )}
         </div>
       ))}
     </>

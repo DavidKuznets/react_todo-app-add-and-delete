@@ -13,6 +13,7 @@ import { TodoFooter } from './components/TodoFooter';
 
 export const App: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
+  const [tempTodo, setTempTodo] = useState<Todo | null>(null);
   const [error, setError] = useState<string>('');
   const [newTodo, setNewTodo] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -35,12 +36,23 @@ export const App: React.FC = () => {
 
   const handleAdd = async (event: React.FormEvent) => {
     event.preventDefault();
-    if (!newTodo.trim()) {
-      inputRef.current?.focus();
+    const trimmedTitle = newTodo.trim();
+
+    if (!trimmedTitle) {
       setError('Title should not be empty');
 
       return;
     }
+
+    const tempTodoItem: Todo = {
+      id: 0,
+      userId: 1,
+      title: trimmedTitle,
+      completed: false,
+    };
+
+    setTempTodo(tempTodoItem);
+    setIsLoading(true);
 
     setIsLoading(true);
     try {
@@ -146,6 +158,7 @@ export const App: React.FC = () => {
           handleToggle={handleToggle}
           handleDelete={handleDelete}
           loadingTodos={loadingTodos}
+          tempTodo={tempTodo}
         />
 
         <TodoFooter

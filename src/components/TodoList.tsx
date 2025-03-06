@@ -9,6 +9,7 @@ interface Props {
   handleToggle: (id: number) => void;
   handleDelete: (id: number) => Promise<void>;
   loadingTodos: number[];
+  tempTodo: Todo | null;
 }
 
 export const TodoList: React.FC<Props> = ({
@@ -17,6 +18,7 @@ export const TodoList: React.FC<Props> = ({
   handleToggle,
   handleDelete,
   loadingTodos,
+  tempTodo,
 }) => {
   return (
     <section
@@ -32,6 +34,7 @@ export const TodoList: React.FC<Props> = ({
         filteredTodos={filteredTodos}
         handleDelete={handleDelete}
         loadingTodos={loadingTodos}
+        tempTodo={tempTodo}
       />
     </section>
   );
