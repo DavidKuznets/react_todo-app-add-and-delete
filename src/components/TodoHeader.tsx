@@ -34,6 +34,7 @@ export const TodoHeader: React.FC<Props> = ({
           onChange={event => setNewTodo(event.target.value)}
           disabled={isLoading}
           ref={inputRef}
+          autoFocus
         />
       </form>
     </header>

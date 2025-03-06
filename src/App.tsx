@@ -37,7 +37,7 @@ export const App: React.FC = () => {
     event.preventDefault();
     if (!newTodo.trim()) {
       inputRef.current?.focus();
-      setError('Todo cannot be empty');
+      setError('Title should not be empty');
 
       return;
     }
@@ -53,7 +53,9 @@ export const App: React.FC = () => {
       inputRef.current?.focus();
       setError('Unable to add todo');
     } finally {
-      inputRef.current?.focus();
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 0);
       setIsLoading(false);
     }
   };
@@ -86,9 +88,9 @@ export const App: React.FC = () => {
   };
 
   useEffect(() => {
-    setTimeout(() => {
-      inputRef.current?.focus();
-    }, 0);
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
   }, []);
 
   useEffect(() => {
@@ -104,6 +106,10 @@ export const App: React.FC = () => {
         setError('Unable to load todos');
       } finally {
         setIsLoading(false);
+
+        setTimeout(() => {
+          inputRef.current?.focus();
+        }, 0);
       }
     };
 
