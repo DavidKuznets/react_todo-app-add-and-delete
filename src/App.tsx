@@ -1,6 +1,3 @@
-/* eslint-disable jsx-a11y/label-has-associated-control */
-/* eslint-disable jsx-a11y/control-has-associated-label */
-
 import React, { useEffect, useState, useRef } from 'react';
 import { getTodos, addTodo, deleteTodo } from './api/todos';
 import { TodoList } from './components/TodoList';
@@ -54,20 +51,17 @@ export const App: React.FC = () => {
     setTempTodo(tempTodoItem);
     setIsLoading(true);
 
-    setIsLoading(true);
     try {
       const newTodoItem = { title: newTodo, completed: false };
       const savedTodo = await addTodo(newTodoItem);
 
       setTodos([...todos, savedTodo]);
       setNewTodo('');
+      setTempTodo(null);
     } catch {
       inputRef.current?.focus();
       setError('Unable to add todo');
     } finally {
-      setTimeout(() => {
-        inputRef.current?.focus();
-      }, 0);
       setIsLoading(false);
     }
   };
@@ -100,12 +94,6 @@ export const App: React.FC = () => {
   };
 
   useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.focus();
-    }
-  }, []);
-
-  useEffect(() => {
     const loadTodos = async () => {
       setError('');
       setIsLoading(true);
@@ -118,7 +106,6 @@ export const App: React.FC = () => {
         setError('Unable to load todos');
       } finally {
         setIsLoading(false);
-
         setTimeout(() => {
           inputRef.current?.focus();
         }, 0);
@@ -141,7 +128,6 @@ export const App: React.FC = () => {
   return (
     <div className="todoapp">
       <h1 className="todoapp__title">todos</h1>
-
       <div className="todoapp__content">
         <TodoHeader
           newTodo={newTodo}
