@@ -3,6 +3,7 @@ import { getTodos, addTodo, deleteTodo } from './api/todos';
 import { TodoList } from './components/TodoList';
 import { TodoHeader } from './components/TodoHeader';
 import { Todo } from './types/Todo';
+import { FilterType } from './types/enum';
 import './styles/index.scss';
 import './styles/todoapp.scss';
 import './styles/filter.scss';
@@ -15,7 +16,7 @@ export const App: React.FC = () => {
   const [newTodo, setNewTodo] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [loadingTodos, setLoadingTodos] = useState<number[]>([]);
-  const [filter, setFilter] = useState<'all' | 'active' | 'completed'>('all');
+  const [filter, setFilter] = useState<FilterType>(FilterType.All);
 
   const inputRef = useRef<HTMLInputElement>(null);
 

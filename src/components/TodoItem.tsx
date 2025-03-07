@@ -2,95 +2,49 @@
 import { Todo } from '../types/Todo';
 
 interface PropsTodoItem {
-  filteredTodos: Todo[];
-  isLoading: boolean;
+  todo: Todo;
   handleToggle: (id: number) => void;
   handleDelete: (id: number) => Promise<void>;
   loadingTodos: number[];
-  tempTodo: Todo | null;
 }
 
 export const TodoItem: React.FC<PropsTodoItem> = ({
+  todo,
   handleToggle,
-  filteredTodos,
   handleDelete,
   loadingTodos,
-  tempTodo,
 }) => {
   return (
-    <>
-      {filteredTodos.map(todo => (
-        <div
-          key={todo.id}
-          data-cy="Todo"
-          className={`todo ${todo.completed ? 'completed' : ''}`}
-        >
-          <label className="todo__status-label">
-            <input
-              data-cy="TodoStatus"
-              type="checkbox"
-              className="todo__status"
-              checked={todo.completed}
-              onChange={() => handleToggle(todo.id)}
-            />
-          </label>
+    <div data-cy="Todo" className={`todo ${todo.completed ? 'completed' : ''}`}>
+      <label className="todo__status-label">
+        <input
+          data-cy="TodoStatus"
+          type="checkbox"
+          className="todo__status"
+          checked={todo.completed}
+          onChange={() => handleToggle(todo.id)}
+        />
+      </label>
 
-          <span data-cy="TodoTitle" className="todo__title">
-            {todo.title}
-          </span>
+      <span data-cy="TodoTitle" className="todo__title">
+        {todo.title}
+      </span>
 
-          <button
-            type="button"
-            className="todo__remove"
-            data-cy="TodoDelete"
-            onClick={() => handleDelete(todo.id)}
-          >
-            ×
-          </button>
+      <button
+        type="button"
+        className="todo__remove"
+        data-cy="TodoDelete"
+        onClick={() => handleDelete(todo.id)}
+      >
+        ×
+      </button>
 
-          <div
-            data-cy="TodoLoader"
-            className={`modal overlay ${loadingTodos.includes(todo.id) ? 'is-active' : ''}`}
-          >
-            <div className="modal-background has-background-white-ter" />
-            <div className="loader" />
-          </div>
-        </div>
-      ))}
-
-      {tempTodo && (
-        <div
-          key={tempTodo.id}
-          data-cy="Todo"
-          className={`todo ${tempTodo.completed ? 'completed' : ''}`}
-        >
-          <label className="todo__status-label">
-            <input
-              data-cy="TodoStatus"
-              type="checkbox"
-              className="todo__status"
-              checked={tempTodo.completed}
-              onChange={() => handleToggle(tempTodo.id)}
-            />
-          </label>
-          <span data-cy="TodoTitle" className="todo__title">
-            {tempTodo.title}
-          </span>
-          <button
-            type="button"
-            className="todo__remove"
-            data-cy="TodoDelete"
-            onClick={() => handleDelete(tempTodo.id)}
-          >
-            ×
-          </button>
-
-          <div data-cy="TodoLoader" className="modal overlay is-active">
-            <div className="modal-background has-background-white-ter" />
-            <div className="loader" />
-          </div>
+      {loadingTodos.includes(todo.id) && (
+        <div data-cy="TodoLoader" className="modal overlay is-active">
+          <div className="modal-background has-background-white-ter" />
+          <div className="loader" />
         </div>
       )}
-    </>
+    </div>
   );
 };
